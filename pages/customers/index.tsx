@@ -1,28 +1,32 @@
 import { NextPage, GetStaticProps, InferGetStaticPropsType } from "next";
+import axios from 'axios';
 type Customer = {
     id: number,
     name: string,
     industry: string
+}
+type Order = {
+    id: number,
+    description: string,
+    totalInCents: number
+}
+
+type GetCustomerReponse = {
+    customers: Customer[]
 }
 
 export const getStaticProps: GetStaticProps = (async (context) => {
     // const posts = await res.json();
     // By returning { props: { posts } }, the Blog component
     // will receive `posts` as a prop at build time
+    const result = await axios.get<{
+        customers: Customer[]
+    }>("http://127.0.0.1:8000/api/customers/");
+    console.log("result", result)
+
     return {
         props: {
-            customers: [
-                {
-                    id: 1,
-                    name: "xue",
-                    industry: "papa"
-                },
-                {
-                    id: 2,
-                    name: "Wu",
-                    industry: "Mama"
-                },
-            ] as Customer[],
+            customers: result.data.customers,
         },
     }
 
@@ -33,7 +37,7 @@ const Customers: NextPage = ({ customers }: InferGetStaticPropsType<typeof getSt
     console.log("prop", customers);
     return (<div>
         <h1>
-            Customer
+            Customer 123
         </h1>
         {customers.map((customer: Customer) => {
             return (
