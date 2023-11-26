@@ -1,6 +1,6 @@
 import { NextPage, GetStaticProps, InferGetStaticPropsType } from "next";
 import axios from 'axios';
-type Customer = {
+export type Customer = {
     id: number,
     name: string,
     industry: string
@@ -28,6 +28,9 @@ export const getStaticProps: GetStaticProps = (async (context) => {
         props: {
             customers: result.data.customers,
         },
+        revalidate: 20,
+
+
     }
 
 }
