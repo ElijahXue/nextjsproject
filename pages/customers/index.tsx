@@ -1,5 +1,7 @@
 import { NextPage, GetStaticProps, InferGetStaticPropsType } from "next";
 import axios from 'axios';
+import { MongoClient } from "mongodb";
+import { ServerApiVersion } from "mongodb";
 export type Customer = {
     id: number,
     name: string,
@@ -18,11 +20,25 @@ type GetCustomerReponse = {
 export const getStaticProps: GetStaticProps = (async (context) => {
     // const posts = await res.json();
     // By returning { props: { posts } }, the Blog component
+
+
+    const uri = "mongodb+srv://xue:123@xue.hjvsy80.mongodb.net/Customers?retryWrites=true&w=majority";
+    // const uri = "mongodb+srv://xue:123@xue.hjvsy80.mongodb.net/sample_mflix?retryWrites=true&w=majority";
+
+
+    const mongoClient = new MongoClient(uri);
+    const data = await mongoClient.db()
+        .collection("Customers")
+        .find()
+        .toArray();
+
+    console.log("!!!!!", data);
+
     // will receive `posts` as a prop at build time
     const result = await axios.get<{
         customers: Customer[]
     }>("http://127.0.0.1:8000/api/customers/");
-    console.log("result", result)
+    // console.log("result", result)
 
     return {
         props: {
@@ -37,7 +53,7 @@ export const getStaticProps: GetStaticProps = (async (context) => {
 )
 
 const Customers: NextPage = ({ customers }: InferGetStaticPropsType<typeof getStaticProps>) => {
-    console.log("prop", customers);
+    // console.log("prop", customers);
     return (<div>
         <h1>
             Customer 123
