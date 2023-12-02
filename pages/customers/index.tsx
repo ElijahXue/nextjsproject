@@ -3,6 +3,8 @@ import axios from 'axios';
 import { MongoClient } from "mongodb";
 import { ServerApiVersion, ObjectId } from "mongodb";
 import clientPromise from "../../lib/mongodb";
+
+import { getCustomers } from "../api/customers";
 export type Customer = {
     _id: ObjectId,
     name: string,
@@ -22,13 +24,12 @@ export const getStaticProps: GetStaticProps = (async (context) => {
     // const uri = "mongodb+srv://xue:123@xue.hjvsy80.mongodb.net/Customers?retryWrites=true&w=majority";
     // // const uri = "mongodb+srv://xue:123@xue.hjvsy80.mongodb.net/sample_mflix?retryWrites=true&w=majority";
     // const mongoClient = new MongoClient(uri);
-
-    const mongoClient = await clientPromise;
-
-    const data = await mongoClient.db()
-        .collection("Customers")
-        .find()
-        .toArray();
+    const data = await getCustomers();
+    // const mongoClient = await clientPromise;
+    // const data = await mongoClient.db()
+    //     .collection("Customers")
+    //     .find()
+    //     .toArray();
 
     // console.log("!!!!!", data);
 
@@ -40,7 +41,7 @@ export const getStaticProps: GetStaticProps = (async (context) => {
 
     return {
         props: {
-            customers: JSON.parse(JSON.stringify(data)),
+            customers: data,
         },
         revalidate: 20,
 

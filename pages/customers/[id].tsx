@@ -7,6 +7,7 @@ import { BSONType, MongoClient, ObjectId } from "mongodb";
 import clientPromise from "../../lib/mongodb";
 import { ServerApiVersion } from "mongodb";
 import { BSONError } from 'bson'
+import { getCustomer } from "../api/customers/[id]";
 type Props = {
     customer?: Customer;
 }
@@ -22,11 +23,13 @@ export const getStaticProps: GetStaticProps<Props, Params> = async (context) => 
     const params = context.params!;
 
     try {
-        const mongoClient = await clientPromise;
+        // const mongoClient = await clientPromise;
+        // const data = await mongoClient.db()
+        //     .collection("Customers")
+        //     .findOne({ "_id": new ObjectId(params.id) }) as Customer
 
-        const data = await mongoClient.db()
-            .collection("Customers")
-            .findOne({ "_id": new ObjectId(params.id) }) as Customer
+        const data = await getCustomer(params.id as string);
+
         console.log("!!data!!", data)
         if (!data) {
             return {
@@ -87,7 +90,7 @@ const Customer: NextPage<Props> = (props) => {
     }
     const { id } = router.query;
     console.log(id)
-    return <h1> {props.customer ? ("Customer" + props.customer.name) : null} </h1>;
+    return <h1> {props.customer ? ("Customer  " + props.customer.name) : null} </h1>;
 };
 
 export default Customer;
